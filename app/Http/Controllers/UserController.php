@@ -28,16 +28,22 @@ class UserController extends Controller
     }
    
 
-    function updateUser(Request $req)
-    {
-        $data=User::find($req->id);
-        $data->name=$req->name;
-        $data->email=$req->email;
-        $data->password=$req->password;
-        $data->save();
-        return redirect("testData");
+    public function updateUser(Request $request)
+{
+    $validatedData = $request->validate([
+        'name' => 'required',
+        'email' => 'required|email',
+        'password' => 'required|min:6',
+    ]);
 
-    }
+    $user = User::find($request->id);
+    $user->name = $validatedData['name'];
+    $user->email = $validatedData['email'];
+    $user->password = $validatedData['password'];
+    $user->save();
+
+    return redirect("testData");
+}
 
    
 }
